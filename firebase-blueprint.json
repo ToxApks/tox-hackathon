@@ -1,0 +1,59 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Student user profile and progress",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "progress": { "type": "integer", "description": "Overall learning progress 0-100" }
+      },
+      "required": ["uid", "email", "displayName", "progress"]
+    },
+    "Resource": {
+      "title": "Resource",
+      "description": "Academic resource like PDF or notes",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Owner UID" },
+        "title": { "type": "string" },
+        "type": { "type": "string", "enum": ["pdf", "note"] },
+        "uploadDate": { "type": "string", "format": "date-time" },
+        "topics": { 
+          "type": "array",
+          "items": { "$ref": "Topic" }
+        }
+      },
+      "required": ["userId", "title", "type", "uploadDate", "topics"]
+    },
+    "Topic": {
+      "title": "Topic",
+      "description": "A specific learning topic extracted from a resource",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "keyPoints": { "type": "array", "items": { "type": "string" } },
+        "example": { "type": "string" },
+        "order": { "type": "integer" },
+        "completed": { "type": "boolean" },
+        "score": { "type": "integer" }
+      },
+      "required": ["id", "title", "content", "keyPoints", "example", "order", "completed"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile documents"
+    },
+    "/resources/{resourceId}": {
+      "schema": "Resource",
+      "description": "Uploaded resources and their extracted topics"
+    }
+  }
+}
